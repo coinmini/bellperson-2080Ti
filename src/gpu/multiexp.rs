@@ -110,10 +110,11 @@ where
 
         let exp_bits = exp_size::<E>() * 8;
         let core_count = utils::get_core_count(&d);
-        let mem = d.memory();
-        let max_n = calc_chunk_size::<E>(mem, core_count);
-        let best_n = calc_best_chunk_size(MAX_WINDOW_SIZE, core_count, exp_bits);
-        let n = std::cmp::min(max_n, best_n);
+        // let mem = d.memory();
+        // let max_n = calc_chunk_size::<E>(mem, core_count);
+        // let best_n = calc_best_chunk_size(MAX_WINDOW_SIZE, core_count, exp_bits);
+        // let n = std::cmp::min(max_n, best_n);
+        let n = 30000000
 
         Ok(SingleMultiexpKernel {
             program: opencl::Program::from_opencl(d, &src)?,
@@ -317,7 +318,8 @@ where
         let n = n - cpu_n;
         let (cpu_bases, bases) = bases.split_at(cpu_n);
         let (cpu_exps, exps) = exps.split_at(cpu_n);
-        let chunk_size = ((n as f64) / (num_devices as f64)).ceil() as usize;
+        // let chunk_size = ((n as f64) / (num_devices as f64)).ceil() as usize;
+        let chunk_size = 30000000
 
         crate::multicore::THREAD_POOL.install(|| {
             use rayon::prelude::*;
@@ -338,7 +340,7 @@ where
                             .zip(self.kernels.par_iter_mut())
                             .map(|((bases, exps), kern)| -> Result<<G as CurveAffine>::Projective, GPUError> {
                                 let mut acc = <G as CurveAffine>::Projective::zero();
-                                let mut jack_chunk = 40000000;
+                                let mut jack_chunk = 30000000;
                                 let size_result = std::mem::size_of::<<G as CurveAffine>::Projective>();
                                 if size_result > 144 {
                                     jack_chunk = (jack_chunk as f64 / 12f64).ceil() as usize;
