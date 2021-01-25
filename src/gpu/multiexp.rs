@@ -164,8 +164,8 @@ where
         let size3 = std::mem::size_of::<<G as CurveAffine>::Projective>();
         let mem1 = size1 * n;
         let mem2 = size2 * n;
-        let mem3 = size3 * 2 * self.core_count * bucket_len;
-        let mem4 = size3 * 2 * self.core_count;
+        let mem3 = size3 * 4 * self.core_count * bucket_len;
+        let mem4 = size3 * 4 * self.core_count;
         info!("GABEDEBUG: <G> size:{}, <PrimeField> size:{}, <Projective> size:{}", size1, size2, size3);
         info!("GABEDEBUG: GPU mem need:{}byte, {}Mbyte", mem1 + mem2 + mem3 + mem4, (mem1 + mem2 + mem3 + mem4)/(1024*1024));
         
@@ -343,7 +343,7 @@ where
                                 let mut jack_chunk = 20000000;
                                 let size_result = std::mem::size_of::<<G as CurveAffine>::Projective>();
                                 if size_result > 144 {
-                                    jack_chunk = (jack_chunk as f64 / 12f64).ceil() as usize;
+                                    jack_chunk = (jack_chunk as f64 / 15f64).ceil() as usize;
                                 }
                                 for (bases, exps) in bases.chunks(jack_chunk).zip(exps.chunks(jack_chunk)) {
                                     let result = kern.multiexp(bases, exps, bases.len())?;
