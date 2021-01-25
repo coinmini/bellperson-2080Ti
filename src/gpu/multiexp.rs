@@ -17,7 +17,7 @@ use std::sync::mpsc;
 extern crate scoped_threadpool;
 use scoped_threadpool::Pool;
 
-const MAX_WINDOW_SIZE: usize = 11;
+const MAX_WINDOW_SIZE: usize = 10;
 const LOCAL_WORK_SIZE: usize = 256;
 const MEMORY_PADDING: f64 = 0.1f64; // Let 20% of GPU memory be free
 
@@ -168,6 +168,7 @@ where
         info!("GABEDEBUG: <G> size:{}, <PrimeField> size:{}, <Projective> size:{}", size1, size2, size3);
         info!("GABEDEBUG: GPU mem need:{}byte, {}Mbyte", mem1 + mem2 + mem3 + mem4, (mem1 + mem2 + mem3 + mem4)/(1024*1024));
         
+        info!("GABEDEBUG: self.core_count is :{}",  self.core_count);
         info!("GABEDEBUG: GPU mem1 need:{}Mbyte",  (mem1)/(1024*1024));
         info!("GABEDEBUG: GPU mem2 need:{}Mbyte",  (mem2)/(1024*1024));
         info!("GABEDEBUG: GPU mem3 need:{}Mbyte",  (mem3)/(1024*1024));
@@ -337,7 +338,7 @@ where
                             .zip(self.kernels.par_iter_mut())
                             .map(|((bases, exps), kern)| -> Result<<G as CurveAffine>::Projective, GPUError> {
                                 let mut acc = <G as CurveAffine>::Projective::zero();
-                                let mut jack_chunk = kern.n;
+                                let mut jack_chunk = 40000000;
                                 let size_result = std::mem::size_of::<<G as CurveAffine>::Projective>();
                                 if size_result > 144 {
                                     jack_chunk = (jack_chunk as f64 / 12f64).ceil() as usize;
