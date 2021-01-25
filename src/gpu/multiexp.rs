@@ -187,10 +187,10 @@ where
         exp_buffer.write_from(0, exps)?;
         let bucket_buffer = self
             .program
-            .create_buffer::<<G as CurveAffine>::Projective>(4 * self.core_count * bucket_len)?;
+            .create_buffer::<<G as CurveAffine>::Projective>(2 * self.core_count * bucket_len)?;
         let result_buffer = self
             .program
-            .create_buffer::<<G as CurveAffine>::Projective>(4 * self.core_count)?;
+            .create_buffer::<<G as CurveAffine>::Projective>(2 * self.core_count)?;
 
         // Make global work size divisible by `LOCAL_WORK_SIZE`
         let mut global_work_size = num_windows * num_groups;
