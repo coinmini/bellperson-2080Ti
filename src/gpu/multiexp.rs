@@ -52,7 +52,7 @@ where
 
 fn calc_num_groups(core_count: usize, num_windows: usize) -> usize {
     // Observations show that we get the best performance when num_groups * num_windows ~= 2 * CUDA_CORES
-    4 * core_count / num_windows
+    2 * core_count / num_windows
 }
 
 // fn calc_window_size(n: usize, exp_bits: usize, core_count: usize) -> usize {
@@ -156,6 +156,17 @@ where
         // Each group will have `num_windows` threads and as there are `num_groups` groups, there will
         // be `num_groups` * `num_windows` threads in total.
         // Each thread will use `num_groups` * `num_windows` * `bucket_len` buckets.
+        let size1 = std::mem::size_of::<G>();
+        let size2 = std::mem::size_of::<<<G::Engine as ScalarEngine>::Fr as PrimeField>::Repr>();
+        let size3 = std::mem::size_of::<<G as CurveAffine>::Projective>();
+        let mem1 = size1 * n;
+        let mem2 = size2 * n;
+        let mem3 = size3 * 2 * self.core_count * bucket_len;
+        let mem4 = size3 * 2 * self.core_count;
+        info!("GABEDEBUG: <G> size:{}, <PrimeField> size:{}, <Projective> size:{}", size1, size2, size3);
+        info!("GABEDEBUG: GPU mem need:{}byte, {}Mbyte", mem1 + mem2 + mem3 + mem4, (mem1 + mem2 + mem3 + mem4)/(1024*1024));
+
+
 
         let mut base_buffer = self.program.create_buffer::<G>(n)?;
         base_buffer.write_from(0, bases)?;
