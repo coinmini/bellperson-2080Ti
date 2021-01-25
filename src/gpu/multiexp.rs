@@ -17,9 +17,9 @@ use std::sync::mpsc;
 extern crate scoped_threadpool;
 use scoped_threadpool::Pool;
 
-const MAX_WINDOW_SIZE: usize = 11;
+const MAX_WINDOW_SIZE: usize = 9;
 const LOCAL_WORK_SIZE: usize = 256;
-const MEMORY_PADDING: f64 = 0.2f64; // Let 20% of GPU memory be free
+const MEMORY_PADDING: f64 = 0.1f64; // Let 20% of GPU memory be free
 
 pub fn get_cpu_utilization() -> f64 {
     use std::env;
