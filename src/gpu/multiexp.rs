@@ -17,7 +17,7 @@ use std::sync::mpsc;
 extern crate scoped_threadpool;
 use scoped_threadpool::Pool;
 
-const MAX_WINDOW_SIZE: usize = 9;
+const MAX_WINDOW_SIZE: usize = 11;
 const LOCAL_WORK_SIZE: usize = 256;
 const MEMORY_PADDING: f64 = 0.1f64; // Let 20% of GPU memory be free
 
@@ -144,6 +144,8 @@ where
         let num_groups = calc_num_groups(self.core_count, num_windows);
         let bucket_len = 1 << window_size;
 
+        info!("bucket_len is :{}",  bucket_len);
+
         // let size1 = std::mem::size_of::<G>();
         // let size2 = std::mem::size_of::<<<G::Engine as ScalarEngine>::Fr as PrimeField>::Repr>();
         // let size3 = std::mem::size_of::<<G as CurveAffine>::Projective>();
@@ -165,6 +167,12 @@ where
         let mem4 = size3 * 2 * self.core_count;
         info!("GABEDEBUG: <G> size:{}, <PrimeField> size:{}, <Projective> size:{}", size1, size2, size3);
         info!("GABEDEBUG: GPU mem need:{}byte, {}Mbyte", mem1 + mem2 + mem3 + mem4, (mem1 + mem2 + mem3 + mem4)/(1024*1024));
+        
+        info!("GABEDEBUG: GPU mem1 need:{}Mbyte",  (mem1)/(1024*1024));
+        info!("GABEDEBUG: GPU mem2 need:{}Mbyte",  (mem2)/(1024*1024));
+        info!("GABEDEBUG: GPU mem3 need:{}Mbyte",  (mem3)/(1024*1024));
+        info!("GABEDEBUG: GPU mem4 need:{}Mbyte",  (mem4)/(1024*1024));
+
 
 
 
@@ -332,7 +340,7 @@ where
                                 let mut jack_chunk = kern.n;
                                 let size_result = std::mem::size_of::<<G as CurveAffine>::Projective>();
                                 if size_result > 144 {
-                                    jack_chunk = (jack_chunk as f64 / 9f64).ceil() as usize;
+                                    jack_chunk = (jack_chunk as f64 / 12f64).ceil() as usize;
                                 }
                                 for (bases, exps) in bases.chunks(jack_chunk).zip(exps.chunks(jack_chunk)) {
                                     let result = kern.multiexp(bases, exps, bases.len())?;
