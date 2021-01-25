@@ -114,7 +114,7 @@ where
         // let max_n = calc_chunk_size::<E>(mem, core_count);
         // let best_n = calc_best_chunk_size(MAX_WINDOW_SIZE, core_count, exp_bits);
         // let n = std::cmp::min(max_n, best_n);
-        let n = 30000000
+        let n = 30000000;
 
         Ok(SingleMultiexpKernel {
             program: opencl::Program::from_opencl(d, &src)?,
@@ -319,7 +319,7 @@ where
         let (cpu_bases, bases) = bases.split_at(cpu_n);
         let (cpu_exps, exps) = exps.split_at(cpu_n);
         // let chunk_size = ((n as f64) / (num_devices as f64)).ceil() as usize;
-        let chunk_size = 30000000
+        let chunk_size = 30000000;
 
         crate::multicore::THREAD_POOL.install(|| {
             use rayon::prelude::*;
