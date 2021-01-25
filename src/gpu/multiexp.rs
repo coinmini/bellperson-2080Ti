@@ -343,7 +343,7 @@ where
                                 let mut jack_chunk = 20000000;
                                 let size_result = std::mem::size_of::<<G as CurveAffine>::Projective>();
                                 if size_result > 144 {
-                                    jack_chunk = (jack_chunk as f64 / 15f64).ceil() as usize;
+                                    jack_chunk = (jack_chunk as f64 / 20f64).ceil() as usize;
                                 }
                                 for (bases, exps) in bases.chunks(jack_chunk).zip(exps.chunks(jack_chunk)) {
                                     let result = kern.multiexp(bases, exps, bases.len())?;
