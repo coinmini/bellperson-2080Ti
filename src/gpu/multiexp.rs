@@ -114,7 +114,7 @@ where
         // let max_n = calc_chunk_size::<E>(mem, core_count);
         // let best_n = calc_best_chunk_size(MAX_WINDOW_SIZE, core_count, exp_bits);
         // let n = std::cmp::min(max_n, best_n);
-        let n = 20000000;
+        let n = 33112281;
 
         Ok(SingleMultiexpKernel {
             program: opencl::Program::from_opencl(d, &src)?,
@@ -320,8 +320,17 @@ where
         let (cpu_bases, bases) = bases.split_at(cpu_n);
         let (cpu_exps, exps) = exps.split_at(cpu_n);
         let chunk_size = ((n as f64) / (num_devices as f64)).ceil() as usize;
+        //ZQ: h_s的
+        //这个是总的，In multiexp chunk_size is ---- :134217727， 现在拆分成20000000一次，循环7次
+
+        //ZQ: l_s start的
+        //In multiexp chunk_size is ---- :130169893，会有写差异
+
+
+        // ZQ: inputs start
+        // In multiexp chunk_size is ---- :129753292
         info!("In multiexp chunk_size is ---- :{}",  chunk_size);
-        
+
         // let chunk_size = 20000000;
 
         crate::multicore::THREAD_POOL.install(|| {
@@ -343,7 +352,7 @@ where
                             .zip(self.kernels.par_iter_mut())
                             .map(|((bases, exps), kern)| -> Result<<G as CurveAffine>::Projective, GPUError> {
                                 let mut acc = <G as CurveAffine>::Projective::zero();
-                                let jack_chunk_3080 = 20000000;
+                                let jack_chunk_3080 = 33112281;
                                 let mut jack_windows_size = 11;
                                 let size_result = std::mem::size_of::<<G as CurveAffine>::Projective>();
                                 if size_result > 144 {
