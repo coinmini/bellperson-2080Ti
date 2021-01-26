@@ -101,6 +101,7 @@ fn exp_size<E: Engine>() -> usize {
     std::mem::size_of::<<E::Fr as ff::PrimeField>::Repr>()
 }
 
+// 单卡单任务
 impl<E> SingleMultiexpKernel<E>
 where
     E: Engine,
@@ -114,7 +115,7 @@ where
         // let max_n = calc_chunk_size::<E>(mem, core_count);
         // let best_n = calc_best_chunk_size(MAX_WINDOW_SIZE, core_count, exp_bits);
         // let n = std::cmp::min(max_n, best_n);
-        let n = 33112281;
+        let n = 20000000;
 
         Ok(SingleMultiexpKernel {
             program: opencl::Program::from_opencl(d, &src)?,
