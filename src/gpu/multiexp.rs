@@ -115,7 +115,8 @@ where
         // let max_n = calc_chunk_size::<E>(mem, core_count);
         // let best_n = calc_best_chunk_size(MAX_WINDOW_SIZE, core_count, exp_bits);
         // let n = std::cmp::min(max_n, best_n);
-        let n = 20000000;
+        //这里的n数据不会真正去用
+        let n = 33554466;
 
         Ok(SingleMultiexpKernel {
             program: opencl::Program::from_opencl(d, &src)?,
