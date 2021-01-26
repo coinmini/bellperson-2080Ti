@@ -353,11 +353,11 @@ where
                             .zip(self.kernels.par_iter_mut())
                             .map(|((bases, exps), kern)| -> Result<<G as CurveAffine>::Projective, GPUError> {
                                 let mut acc = <G as CurveAffine>::Projective::zero();
-                                let jack_chunk_3080 = 33112281;
+                                let jack_chunk_3080 = 20000000;
                                 let mut jack_windows_size = 11;
                                 let size_result = std::mem::size_of::<<G as CurveAffine>::Projective>();
                                 if size_result > 144 {
-                                    jack_windows_size = 9;
+                                    jack_windows_size = 10;
                                 }
                                 for (bases, exps) in bases.chunks(jack_chunk_3080).zip(exps.chunks(jack_chunk_3080)) {
                                     let result = kern.multiexp(bases, exps, bases.len(), jack_windows_size)?;
